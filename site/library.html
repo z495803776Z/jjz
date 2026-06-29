@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>牌义图鉴 — Night Oracle</title>
+<script src="js/tarot-deck.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+body{display:flex;flex-direction:column;min-height:100vh}
+.page-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:16px;padding:16px 32px;background:rgba(5,10,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-link{color:var(--color-muted);font-size:14px;text-decoration:none}.back-link:hover{color:var(--color-text)}
+.page-title-sm{font-family:var(--font-display);font-size:18px;color:var(--color-accent)}
+.lib-scene{flex:1;padding:100px 32px 80px;position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%}
+.lib-header{text-align:center;margin-bottom:40px}
+.lib-header h1{font-family:var(--font-display);font-size:clamp(28px,4vw,40px);margin:0 0 12px}
+.lib-header p{color:var(--color-muted);margin:0 0 24px;line-height:1.7}
+.filter-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.filter-btn{padding:8px 18px;border-radius:var(--radius-pill);border:1px solid var(--color-border);background:transparent;color:var(--color-muted);font-size:13px;cursor:pointer;transition:all .2s ease}
+.filter-btn:hover,.filter-btn.active{border-color:var(--color-accent);color:var(--color-accent);background:rgba(100,210,255,.06)}
+.search-input{width:100%;max-width:400px;padding:12px 18px;border-radius:var(--radius-pill);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font-size:14px;font-family:var(--font-body);outline:none;margin:0 auto 24px;display:block}
+.search-input:focus{border-color:rgba(100,210,255,.3)}
+.search-input::placeholder{color:rgba(255,255,255,.3)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.lib-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:20px;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.lib-card:hover{transform:translateY(-4px);border-color:rgba(100,210,255,.18);box-shadow:0 4px 24px rgba(100,210,255,.08)}
+.lib-card .card-num{font-size:11px;color:var(--color-accent-secondary);letter-spacing:.1em;margin-bottom:8px}
+.lib-card h3{font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--color-text)}
+.lib-card .card-kw{font-size:12px;color:var(--color-accent);letter-spacing:.1em;margin-bottom:10px}
+.lib-card .card-r{font-size:13px;color:var(--color-muted);line-height:1.7;display:none}
+.lib-card.expanded .card-r{display:block}
+.lib-card .expand-hint{font-size:11px;color:rgba(255,255,255,.3);margin-top:8px}
+.lib-card.expanded .expand-hint{display:none}
+.lib-card.hidden-card{display:none}
+.detail-modal{display:none;position:fixed;inset:0;z-index:200;background:rgba(5,10,20,.85);backdrop-filter:blur(12px);justify-content:center;align-items:center;padding:32px}
+.detail-modal.open{display:flex}
+.detail-content{background:rgba(10,16,30,.95);border:1px solid var(--color-border);border-radius:var(--radius-md);max-width:500px;width:100%;padding:32px;position:relative;animation:fadeUp .4s ease}
+.detail-content .close-btn{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--color-muted);font-size:20px;cursor:pointer}
+.detail-content h2{font-family:var(--font-display);font-size:24px;color:var(--color-accent);margin:0 0 8px}
+.detail-content .dk{font-size:13px;color:var(--color-accent-secondary);letter-spacing:.12em;margin:0 0 20px}
+.detail-content .dr{color:var(--color-muted);line-height:1.9;font-size:15px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){.card-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.lib-card{padding:14px}.lib-card h3{font-size:15px}}
+</style>
+</head>
+<body>
+<canvas class="starfield" aria-hidden="true"></canvas>
+<header class="page-header">
+<a class="back-link" href="index.html">← 返回首页</a>
+<span class="page-title-sm">牌义图鉴</span>
+</header>
+<main class="lib-scene">
+<div class="lib-header">
+<h1>塔罗牌全书</h1>
+<p>探索完整的 78 张塔罗牌，了解每张牌的核心含义与关键词。</p>
+<div class="filter-bar">
+<button class="filter-btn active" data-filter="all">全部 78 张</button>
+<button class="filter-btn" data-filter="major">大阿尔卡纳</button>
+<button class="filter-btn" data-filter="wands">权杖</button>
+<button class="filter-btn" data-filter="cups">圣杯</button>
+<button class="filter-btn" data-filter="swords">宝剑</button>
+<button class="filter-btn" data-filter="pentacles">星币</button>
+</div>
+<input class="search-input" id="search" type="text" placeholder="搜索牌名或关键词..." />
+</div>
+<div class="card-grid" id="card-grid"></div>
+</main>
+<div class="detail-modal" id="modal">
+<div class="detail-content">
+<button class="close-btn" id="close-modal">×</button>
+<h2 id="modal-name"></h2>
+<div class="dk" id="modal-kw"></div>
+<p class="dr" id="modal-r"></p>
+</div>
+</div>
+<script type="module">
+import{initStarfield}from'./js/starfield.js';
+const canvas=document.querySelector('.starfield');
+if(canvas)initStarfield(canvas);
+const DECK=TAROT_DECK;
+function suitOf(n){if(/^(愚者|魔术师|女祭司|女皇|皇帝|教皇|恋人|战车|力量|隐士|命运之轮|正义|倒吊人|死神|节制|恶魔|塔|星星|月亮|太阳|审判|世界)/.test(n))return'major';if(n.includes('权杖'))return'wands';if(n.includes('圣杯'))return'cups';if(n.includes('宝剑'))return'swords';return'pentacles'}
+const grid=document.getElementById('card-grid');
+const modal=document.getElementById('modal');
+DECK.forEach(function(card,i){
+  const suit=suitOf(card.n);
+  const div=document.createElement('div');
+  div.className='lib-card';
+  div.dataset.suit=suit;
+  div.dataset.name=card.n.toLowerCase();
+  div.dataset.kw=card.k.toLowerCase();
+  div.innerHTML='<div class="card-num">#'+(i+1).toString().padStart(2,'0')+'</div><img src="'+(card.img||'assets/images/card_face_sample.png')+'" alt="'+card.n+'" style="width:100%;border-radius:8px;margin-bottom:12px;aspect-ratio:2/3;object-fit:cover"/><h3>'+card.n+'</h3><div class="card-kw">'+card.k+'</div>';
+  div.addEventListener('click',function(){document.getElementById('modal-name').textContent=card.n;document.getElementById('modal-kw').textContent=card.k;document.getElementById('modal-r').textContent=card.r||'';modal.classList.add('open')});
+  grid.appendChild(div);
+});
+document.getElementById('close-modal').addEventListener('click',function(){modal.classList.remove('open')});
+modal.addEventListener('click',function(e){if(e.target===modal)modal.classList.remove('open')});
+document.querySelectorAll('.filter-btn').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});this.classList.add('active');const f=this.dataset.filter;document.querySelectorAll('.lib-card').forEach(function(c){c.style.display=(f==='all'||c.dataset.suit===f)?'':'none'})})});
+document.getElementById('search').addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('.lib-card').forEach(function(c){c.style.display=(c.dataset.name.includes(q)||c.dataset.kw.includes(q))?'':'none'})});
+</script>
+</body>
+</html>

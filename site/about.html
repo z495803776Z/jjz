@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>关于 Night Oracle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+body{display:flex;flex-direction:column;min-height:100vh}
+.page-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:16px;padding:16px 32px;background:rgba(5,10,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-link{color:var(--color-muted);font-size:14px;text-decoration:none}.back-link:hover{color:var(--color-text)}
+.page-title-sm{font-family:var(--font-display);font-size:18px;color:var(--color-accent)}
+.about-scene{flex:1;display:flex;flex-direction:column;align-items:center;padding:100px 32px 80px;position:relative;z-index:1;width:100%}
+.about-stage{max-width:700px;width:100%}
+.about-hero{text-align:center;margin-bottom:48px}
+.about-hero h1{font-family:var(--font-display);font-size:clamp(28px,5vw,48px);margin:0 0 12px}
+.about-hero .sub{color:var(--color-muted);font-size:17px;line-height:1.8;margin:0 0 24px}
+.wisdom-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-md);padding:28px;text-align:center;margin:0 0 40px;position:relative;overflow:hidden}
+.wisdom-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(100,210,255,.3),transparent)}
+.wisdom-quote{font-family:var(--font-display);font-size:clamp(16px,2.5vw,20px);color:var(--color-accent);line-height:1.8;margin:0 0 12px}
+.wisdom-source{font-size:13px;color:var(--color-accent-secondary);letter-spacing:.1em}
+.section-block{margin:0 0 40px}
+.section-block h2{font-family:var(--font-display);font-size:22px;color:var(--color-accent);margin:0 0 16px;text-align:center}
+.section-block p{font-size:15px;color:var(--color-text);line-height:1.9;margin:0 0 16px;text-align:center}
+.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0}
+.feature-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-sm);padding:20px;text-align:center}
+.feature-icon{font-size:28px;margin-bottom:8px}
+.feature-title{font-family:var(--font-display);font-size:15px;color:var(--color-text);margin-bottom:6px}
+.feature-desc{font-size:13px;color:var(--color-muted);line-height:1.6}
+.tarot-tip{background:rgba(160,130,255,.04);border:1px solid rgba(160,130,255,.1);border-radius:var(--radius-md);padding:20px 24px;margin:0 0 12px;display:flex;align-items:flex-start;gap:14px}
+.tip-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.tip-content h4{font-family:var(--font-display);font-size:14px;color:var(--color-accent);margin:0 0 4px}
+.tip-content p{font-size:13px;color:var(--color-muted);line-height:1.7;margin:0}
+.about-actions{display:flex;gap:12px;justify-content:center;margin-top:32px}
+.btn-secondary{display:inline-flex;align-items:center;height:44px;padding:0 20px;border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.12);color:var(--color-muted);font-size:14px;text-decoration:none;transition:all .2s ease}
+.btn-secondary:hover{border-color:rgba(100,210,255,.3);color:var(--color-text)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.feature-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<canvas class="starfield" aria-hidden="true"></canvas>
+<header class="page-header">
+<a class="back-link" href="services.html">← 返回占卜入口</a>
+<span class="page-title-sm">关于 Night Oracle</span>
+</header>
+<main class="about-scene">
+<div class="about-stage">
+<div class="about-hero">
+<h1>✨ Night Oracle</h1>
+<p class="sub">在星光与牌面之间，找到属于你的答案。<br/>Night Oracle 是一个沉浸式的塔罗牌占卜体验，让古老的智慧以现代的方式与你对话。</p>
+</div>
+
+<div class="wisdom-card" id="daily-wisdom">
+<p class="wisdom-quote" id="wisdom-quote"></p>
+<span class="wisdom-source" id="wisdom-source"></span>
+</div>
+
+<div class="section-block">
+<h2>为什么选择 Night Oracle</h2>
+<p>我们相信，塔罗牌不是预测未来的工具，而是照亮内心的镜子。每一次抽牌，都是一次与自我对话的机会。</p>
+<div class="feature-grid">
+<div class="feature-item"><div class="feature-icon">🌊</div><div class="feature-title">78张完整牌库</div><div class="feature-desc">包含全部22张大阿卡纳与56张小阿卡纳，每张牌都有深度解读。</div></div>
+<div class="feature-item"><div class="feature-icon">🌟</div><div class="feature-title">多种牌阵选择</div><div class="feature-desc">从单牌到十二宫，十余种牌阵满足不同深度的探索需求。</div></div>
+<div class="feature-item"><div class="feature-icon">🌬</div><div class="feature-title">沉浸式仪式感</div><div class="feature-desc">星尘呼吸、转盘洗牌、逐张翻牌——每个细节都为仪式感而生。</div></div>
+<div class="feature-item"><div class="feature-icon">📔</div><div class="feature-title">占卜记录保存</div><div class="feature-desc">每次占卜自动记录，随时回顾命运的脉络与变化。</div></div>
+</div>
+</div>
+
+<div class="section-block">
+<h2>塔罗牌新手指南</h2>
+<div class="tarot-tip">
+<span class="tip-icon">💡</span>
+<div class="tip-content"><h4>占卜前的准备</h4><p>找一个安静的空间，深呼吸三次，让心静下来。带着一个明确的问题，宇宙的回应会更加清晰。</p></div>
+</div>
+<div class="tarot-tip">
+<span class="tip-icon">🎵</span>
+<div class="tip-content"><h4>信任你的直觉</h4><p>牌面的图像和象征会唤起你内心的共鸣。第一反应往往是最真实的解读——信任你的直觉。</p></div>
+</div>
+<div class="tarot-tip">
+<span class="tip-icon">🔄</span>
+<div class="tip-content"><h4>牌义不是固定的</h4><p>同一张牌在不同情境下有不同的含义。关键词只是起点，真正的解读来自你与牌的对话。</p></div>
+</div>
+<div class="tarot-tip">
+<span class="tip-icon">⭐</span>
+<div class="tip-content"><h4>逆位的智慧</h4><p>牌面朝下并不意味着"坏"。逆位往往暗示能量的内化、延迟或需要被觉察的阴影面。</p></div>
+</div>
+<div class="tarot-tip">
+<span class="tip-icon">💎</span>
+<div class="tip-content"><h4>记录你的解读</h4><p>每次占卜后写下你的感受和联想。时间会证明，这些记录是你最宝贵的自我认知地图。</p></div>
+</div>
+</div>
+
+<div class="about-actions">
+<a class="btn-secondary" href="services.html">✦ 开始占卜</a>
+<a class="btn-secondary" href="zodiac.html">星座运势</a>
+<a class="btn-secondary" href="index.html">返回首页</a>
+</div>
+</div>
+</main>
+<script type="module">
+import{initStarfield}from'./js/starfield.js';
+initStarfield(document.querySelector('.starfield'));
+
+const WISDOMS=[
+  {q:'你不是在寻找答案，你是在寻找自己。',s:'— 塔罗牌的智慧'},
+  {q:'每一张牌都是一面镜子，映照出你内心深处的真相。',s:'— 大阿卡纳的秘密'},
+  {q:'命运不是写好的剧本，而是你每一个选择的回响。',s:'— 命运之轮'},
+  {q:'真正的力量不在于掌控一切，而在于接纳未知。',s:'— 力量牌'},
+  {q:'当你凝视星空的时候，星空也在凝视你。',s:'— 女祭司'},
+  {q:'最深的智慧，往往藏在沉默之中。',s:'— 隐士'},
+  {q:'每一次结束，都是新旅程的起点。',s:'— 死神牌'},
+  {q:'平衡不是静止，而是在流动中找到重心。',s:'— 节制牌'},
+  {q:'你的直觉是宇宙给你的第一封信。',s:'— 月亮牌'},
+  {q:'不要害怕阴影，那说明附近一定有光。',s:'— 塔罗牌的智慧'},
+  {q:'选择忠于内心的方向，即使那条路少有人走。',s:'— 恋人牌'},
+  {q:'时间不会治愈一切，但你会在时间中学会治愈自己。',s:'— 星币七'}
+];
+
+const today=new Date();
+const dayIdx=(today.getFullYear()*365+today.getMonth()*31+today.getDate())%WISDOMS.length;
+const w=WISDOMS[dayIdx];
+document.getElementById('wisdom-quote').textContent='“'+w.q+'”';
+document.getElementById('wisdom-source').textContent=w.s;
+</script>
+</body>
+</html>

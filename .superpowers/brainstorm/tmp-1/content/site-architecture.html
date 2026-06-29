@@ -1,0 +1,67 @@
+﻿<h2>C 方案 · 星象宇宙 — 服务型塔罗网站</h2>
+<p class="subtitle">点击你希望优先落地的首屏节奏，或者直接在终端告诉我补充。</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="height:240px;background:#060b14;display:grid;place-items:center;">
+      <div style="width:90%;height:88%;border-radius:14px;border:1px solid rgba(100,210,255,.12);padding:16px;display:grid;grid-template-rows:auto 1fr auto;gap:12px;background:radial-gradient(circle at 50% 30%,rgba(100,210,255,.10),transparent);">
+        <div style="display:flex;justify-content:space-between;color:#d8f0ff;font-size:12px;">
+          <div>Night Oracle</div><div>Logo</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center;">
+          <div style="height:120px;border-radius:10px;border:1px dashed rgba(100,210,255,.35);display:grid;place-items:center;color:#a8e2ff;font-size:12px;">开屏飞牌动画</div>
+          <div style="height:120px;border-radius:10px;background:linear-gradient(180deg,rgba(100,210,255,.12),rgba(30,80,160,.10));border:1px solid rgba(100,210,255,.18);display:grid;place-items:center;font-size:13px;color:#e5f6ff;">主标题 + 一句转化文案</div>
+        </div>
+        <div style="height:48px;border-radius:999px;background:linear-gradient(90deg,rgba(100,210,255,.18),rgba(160,130,255,.18));border:1px solid rgba(255,255,255,.10);display:grid;place-items:center;color:#fff;font-size:13px;">立即占卜 CTA</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 沉浸开屏</h3>
+      <p>先给一个全屏飞牌+星空呼吸感，再进入服务入口。品牌感最强，适合主打高级占卜服务。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="height:240px;background:#060b14;display:grid;place-items:center;">
+      <div style="width:90%;height:88%;border-radius:14px;border:1px solid rgba(100,210,255,.12);padding:16px;display:grid;grid-template-rows:auto auto 1fr auto;gap:10px;background:radial-gradient(circle at 50% 25%,rgba(100,210,255,.10),transparent);">
+        <div style="display:flex;justify-content:space-between;color:#d8f0ff;font-size:12px;">
+          <div>Night Oracle</div><div>Logo / 副导航</div>
+        </div>
+        <div style="height:80px;border-radius:10px;border:1px dashed rgba(100,210,255,.35);display:grid;place-items:center;color:#a8e2ff;font-size:12px;">短飞牌粒子动效</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <div style="height:90px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;color:#d8f0ff;font-size:12px;">每日一牌</div>
+          <div style="height:90px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;color:#d8f0ff;font-size:12px;">专题占卜</div>
+          <div style="height:90px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;color:#d8f0ff;font-size:12px;">真人/深度解读</div>
+        </div>
+        <div style="height:44px;border-radius:999px;background:linear-gradient(90deg,rgba(100,210,255,.16),rgba(160,130,255,.16));border:1px solid rgba(255,255,255,.10);display:grid;place-items:center;color:#fff;font-size:13px;">开始占卜</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 快转化首屏</h3>
+      <p>保留飞牌氛围，但首屏就把服务分类摆出来。转化效率最高，适合直接卖占卜服务。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="height:240px;background:#060b14;display:grid;place-items:center;">
+      <div style="width:90%;height:88%;border-radius:14px;border:1px solid rgba(100,210,255,.12);padding:16px;display:grid;grid-template-rows:auto 1fr auto auto;gap:10px;background:radial-gradient(circle at 50% 40%,rgba(100,210,255,.10),transparent);">
+        <div style="display:flex;justify-content:space-between;color:#d8f0ff;font-size:12px;">
+          <div>Night Oracle</div><div>Logo</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:12px;align-items:center;">
+          <div style="height:120px;border-radius:10px;border:1px dashed rgba(100,210,255,.35);display:grid;place-items:center;color:#a8e2ff;font-size:12px;">飞牌 + 塔罗主图</div>
+          <div style="display:grid;gap:10px;">
+            <div style="height:52px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;color:#d8f0ff;font-size:12px;">信任背书/好评</div>
+            <div style="height:52px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;color:#d8f0ff;font-size:12px;">服务亮点</div>
+          </div>
+        </div>
+        <div style="height:44px;border-radius:999px;background:linear-gradient(90deg,rgba(100,210,255,.16),rgba(160,130,255,.16));border:1px solid rgba(255,255,255,.10);display:grid;place-items:center;color:#fff;font-size:13px;">立即预约占卜</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.45);text-align:center;">支持 XX 人已占卜 / 评分 / 限时优惠</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 转化+信任</h3>
+      <p>首屏同时强调飞牌氛围、服务价值和信任感。适合你希望直接接咨询、预约、付费转化。</p>
+    </div>
+  </div>
+</div>

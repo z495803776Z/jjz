@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>星座运势 — Night Oracle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+body{display:flex;flex-direction:column;min-height:100vh}
+.page-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:16px;padding:16px 32px;background:rgba(5,10,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-link{color:var(--color-muted);font-size:14px;text-decoration:none}.back-link:hover{color:var(--color-text)}
+.page-title-sm{font-family:var(--font-display);font-size:18px;color:var(--color-accent)}
+.zodiac-scene{flex:1;display:flex;flex-direction:column;align-items:center;padding:100px 32px 80px;position:relative;z-index:1;width:100%}
+.zodiac-stage{max-width:800px;width:100%;text-align:center}
+.zodiac-stage h1{font-family:var(--font-display);font-size:clamp(26px,4vw,40px);margin:0 0 8px}
+.zodiac-stage .sub{color:var(--color-muted);margin:0 0 32px;line-height:1.7;font-size:15px}
+.zodiac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 40px}
+.zodiac-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-md);padding:20px 12px;cursor:pointer;transition:all .3s ease;text-align:center}
+.zodiac-card:hover{transform:translateY(-4px);border-color:rgba(100,210,255,.2);box-shadow:0 0 24px rgba(100,210,255,.08)}
+.zodiac-card.active{border-color:rgba(100,210,255,.4);background:rgba(100,210,255,.06);box-shadow:0 0 30px rgba(100,210,255,.12)}
+.zodiac-icon{font-size:32px;margin-bottom:8px}
+.zodiac-name{font-family:var(--font-display);font-size:15px;color:var(--color-text);margin-bottom:2px}
+.zodiac-date{font-size:11px;color:var(--color-muted)}
+.horoscope-panel{display:none;animation:fadeUp .5s ease}
+.horoscope-panel.visible{display:block}
+.horoscope-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;justify-content:center}
+.horoscope-header .zodiac-icon{font-size:40px}
+.horoscope-title{font-family:var(--font-display);font-size:24px;color:var(--color-accent)}
+.horoscope-date{font-size:13px;color:var(--color-muted)}
+.horoscope-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-md);padding:24px;text-align:left;margin:0 0 16px}
+.horoscope-card h3{font-family:var(--font-display);font-size:16px;color:var(--color-accent);margin:0 0 8px}
+.horoscope-card p{font-size:14px;color:var(--color-text);line-height:1.8;margin:0}
+.horoscope-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 20px}
+.stat-item{text-align:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-sm);padding:16px 12px}
+.stat-label{font-size:12px;color:var(--color-muted);margin-bottom:6px}
+.stat-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.stat-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.stat-fill.love{background:linear-gradient(90deg,#ff6b9d,#ff9de0)}
+.stat-fill.career{background:linear-gradient(90deg,#64d2ff,#a082ff)}
+.stat-fill.health{background:linear-gradient(90deg,#4ade80,#a3e635)}
+.stat-value{font-size:13px;color:var(--color-accent-secondary);margin-top:6px}
+.lucky-section{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 24px}
+.lucky-item{text-align:center;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:var(--radius-sm);padding:12px}
+.lucky-label{font-size:11px;color:var(--color-muted);margin-bottom:4px}
+.lucky-value{font-size:15px;color:var(--color-accent)}
+.btn-secondary{display:inline-flex;align-items:center;height:44px;padding:0 20px;border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.12);color:var(--color-muted);font-size:14px;text-decoration:none;transition:all .2s ease}
+.btn-secondary:hover{border-color:rgba(100,210,255,.3);color:var(--color-text)}
+.horoscope-actions{display:flex;gap:12px;justify-content:center;margin-top:24px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.zodiac-grid{grid-template-columns:repeat(3,1fr)}.horoscope-stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<canvas class="starfield" aria-hidden="true"></canvas>
+<header class="page-header">
+<a class="back-link" href="services.html">← 返回占卜入口</a>
+<span class="page-title-sm">星座运势</span>
+</header>
+<main class="zodiac-scene">
+<div class="zodiac-stage">
+<h1>✨ 今日星座运势</h1>
+<p class="sub">选择你的星座，接收今日的宇宙能量指引。</p>
+<div class="zodiac-grid" id="zodiac-grid"></div>
+<div class="horoscope-panel" id="horoscope-panel"></div>
+</div>
+</main>
+<script type="module">
+import{initStarfield}from'./js/starfield.js';
+initStarfield(document.querySelector('.starfield'));
+
+const SIGNS=[
+  {name:'白羊座',date:'3.21-4.19',icon:'♈',element:'fire'},
+  {name:'金牛座',date:'4.20-5.20',icon:'♉',element:'earth'},
+  {name:'双子座',date:'5.21-6.21',icon:'♊',element:'air'},
+  {name:'巨蟹座',date:'6.22-7.22',icon:'♋',element:'water'},
+  {name:'狮子座',date:'7.23-8.22',icon:'♌',element:'fire'},
+  {name:'处女座',date:'8.23-9.22',icon:'♍',element:'earth'},
+  {name:'天秤座',date:'9.23-10.23',icon:'♎',element:'air'},
+  {name:'天蝎座',date:'10.24-11.22',icon:'♏',element:'water'},
+  {name:'射手座',date:'11.23-12.21',icon:'♐',element:'fire'},
+  {name:'摩羯座',date:'12.22-1.19',icon:'♑',element:'earth'},
+  {name:'水瓶座',date:'1.20-2.18',icon:'♒',element:'air'},
+  {name:'双鱼座',date:'2.19-3.20',icon:'♓',element:'water'}
+];
+
+const FORTUNES = {
+  fire: {
+    overall: [
+      '今日火星能量充沛，你的行动力和领导力达到高峰。适合发起新项目或做出重要决定。',
+      '火元素在你体内燃烧，带来强烈的创造冲动。把握这股力量，但注意不要过于急躁。',
+      '今天的你如同凤凰涅槃，旧的困扰将被火焰净化。勇敢面对变化，新的可能正在诞生。'
+    ],
+    love: [
+      '热情似火的一天，单身者可能遇到令心跳加速的邂逅。已有伴侣者适合安排浪漫约会。',
+      '感情中的直率表达会带来意想不到的好结果。真诚是最好的策略。',
+      '爱情运势上升，你的魅力值爆表。但记住，真正的连接需要耐心和倾听。'
+    ],
+    career: [
+      '事业上迎来突破的契机，你的创意和执行力备受认可。适合提案、面试或启动新计划。',
+      '工作中展现领导力的时刻到了。不要退缩，大胆表达你的想法。',
+      '团队合作中你将扮演关键角色。用你的热情感染他人，共同达成目标。'
+    ],
+    health: [
+      '精力旺盛，适合高强度运动。但要注意补充水分，避免过度消耗。',
+      '身体状态良好，适合户外活动。深呼吸练习能帮助你更好地管理情绪能量。',
+      '注意头部和面部的保养，避免熬夜。适度运动能释放多余的火元素能量。'
+    ]
+  },
+  earth: {
+    overall: [
+      '土元素赋予你今日超强的稳定感和执行力。务实的态度将为你带来实质性的进展。',
+      '今日适合处理财务、整理环境或制定长期计划。你的判断力在物质层面尤为精准。',
+      '大地之母的能量环绕着你，带来安全感和踏实感。今天是播种的好日子。'
+    ],
+    love: [
+      '稳定的感情运势，适合与伴侣进行深入的心灵交流。物质上的小惊喜能增进感情。',
+      '爱情需要实际行动来证明。今天用具体的行为表达爱意，比千言万语更有力。',
+      '感情中追求安全感的本能被激活。坦诚表达你的需求，对方会给予温暖的回应。'
+    ],
+    career: [
+      '财运上升，务实的工作态度获得回报。适合处理合同、预算或投资相关事务。',
+      '工作中你的细心和耐心是最大的优势。复杂的任务在你手中将井然有序。',
+      '适合学习新技能或精进专业能力。今天的投入将在未来带来丰厚回报。'
+    ],
+    health: [
+      '关注身体的基本需求：充足的睡眠、均衡的饮食和适度的运动。',
+      '适合做瑜伽、太极等温和运动。亲近自然能帮助你恢复能量。',
+      '注意消化系统的保养，规律作息是今天的健康关键词。'
+    ]
+  },
+  air: {
+    overall: [
+      '风元素赋予你超强的沟通能力和灵活思维。今天适合社交、学习和信息交流。',
+      '思维敏捷的一天，灵感如风般自由穿梭。记录下每一个闪过的念头，它们都蕴含价值。',
+      '今日的你如同清风拂面，带来新鲜的视角和创意。打破常规，尝试新的可能性。'
+    ],
+    love: [
+      '沟通是今日感情的关键词。与心仪的人展开深度对话，你会发现新的共鸣。',
+      '社交场合中桃花运旺盛。你的机智和幽默感是最强的吸引力法则。',
+      '感情中需要更多的理性和空间。给彼此一些独处的时间，关系会更加健康。'
+    ],
+    career: [
+      '创意和沟通能力在工作中大放异彩。适合提案、写作、教学或任何形式的表达。',
+      '人脉网络为你带来意想不到的机会。保持开放的心态，新的合作可能随时出现。',
+      '学习新知识的效率极高。利用今天的好状态充电，为未来的突破做准备。'
+    ],
+    health: [
+      '呼吸系统需要特别关注。深呼吸练习和户外散步能帮助你保持清醒。',
+      '精神活跃但身体可能被忽略。记得定时休息，避免久坐。',
+      '适合有氧运动，如跑步、游泳或骑行。让身体跟上思维的节奏。'
+    ]
+  },
+  water: {
+    overall: [
+      '水元素今日在你体内流动得格外充沛。直觉敏锐，情感丰富，适合内省和疗愈。',
+      '今日的情绪像潮汐般起伏，但每一种感受都蕴含着深刻的信息。信任你的第六感。',
+      '月亮的能量深深影响着你。今天适合冥想、写日记或与亲密的人分享心事。'
+    ],
+    love: [
+      '感情运势极佳，你的温柔和共情力是今天最强的武器。用心倾听，爱会自然流淌。',
+      '旧情可能重新浮现。无论结果如何，这都是一个疗愈和成长的机会。',
+      '浪漫氛围浓厚，适合安排充满仪式感的约会。月光下的告白格外动人。'
+    ],
+    career: [
+      '直觉在工作中发挥重要作用。如果某个决定让你感到不安，相信那个感觉。',
+      '适合从事创意、疗愈或服务类工作。你的同理心是今天最宝贵的职场资产。',
+      '团队中的情感氛围需要你来调和。用温柔但坚定的方式化解冲突。'
+    ],
+    health: [
+      '情绪健康是今天的重点。泡个热水澡、听舒缓的音乐，让自己好好放松。',
+      '身体可能对天气变化较为敏感。注意保暖，多喝温水。',
+      '适合水中运动或冥想。让水的疗愈力量帮助你恢复身心平衡。'
+    ]
+  }
+};
+
+const LUCKY = {
+  colors: ['银白','深蓝','紫罗兰','翡翠绿','珊瑚红','月光金','薰衣草紫','午夜蓝','琥珀黄','玫瑰粉','青碧色','星尘灰'],
+  numbers: ['3','7','11','21','5','9','13','8','6','22','4','17'],
+  items: ['水晶','月光石','薰衣草','星星吊坠','银饰','古铜钥匙','黑曜石','玫瑰花瓣','海蓝宝石','塔罗牌','羽毛','猫眼石']
+};
+
+const grid = document.getElementById('zodiac-grid');
+const panel = document.getElementById('horoscope-panel');
+const today = new Date();
+const dateStr = today.toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric',weekday:'long'});
+const seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+
+function seededRandom(s) { let x = Math.sin(s) * 10000; return x - Math.floor(x); }
+
+SIGNS.forEach((sign, idx) => {
+  const card = document.createElement('div');
+  card.className = 'zodiac-card';
+  card.innerHTML = '<div class="zodiac-icon">' + sign.icon + '</div><div class="zodiac-name">' + sign.name + '</div><div class="zodiac-date">' + sign.date + '</div>';
+  card.addEventListener('click', () => showHoroscope(idx));
+  grid.appendChild(card);
+});
+
+function showHoroscope(idx) {
+  document.querySelectorAll('.zodiac-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.zodiac-card')[idx].classList.add('active');
+  
+  const sign = SIGNS[idx];
+  const f = FORTUNES[sign.element];
+  const s = seed + idx * 137;
+  const r = (arr, offset) => arr[Math.floor(seededRandom(s + offset) * arr.length)];
+  
+  const love = Math.floor(seededRandom(s + 10) * 30) + 70;
+  const career = Math.floor(seededRandom(s + 20) * 30) + 70;
+  const health = Math.floor(seededRandom(s + 30) * 30) + 70;
+  
+  panel.innerHTML =
+    '<div class="horoscope-header"><span class="zodiac-icon">' + sign.icon + '</span><div><h2 class="horoscope-title">' + sign.name + ' 今日运势</h2><p class="horoscope-date">' + dateStr + '</p></div></div>' +
+    '<div class="horoscope-card"><h3>✨ 综合运势</h3><p>' + r(f.overall, 1) + '</p></div>' +
+    '<div class="horoscope-stats">' +
+      '<div class="stat-item"><div class="stat-label">❤ 爱情</div><div class="stat-bar"><div class="stat-fill love" style="width:' + love + '%"></div></div><div class="stat-value">' + love + '%</div></div>' +
+      '<div class="stat-item"><div class="stat-label">⭐ 事业</div><div class="stat-bar"><div class="stat-fill career" style="width:' + career + '%"></div></div><div class="stat-value">' + career + '%</div></div>' +
+      '<div class="stat-item"><div class="stat-label">🌿 健康</div><div class="stat-bar"><div class="stat-fill health" style="width:' + health + '%"></div></div><div class="stat-value">' + health + '%</div></div>' +
+    '</div>' +
+    '<div class="horoscope-card"><h3>❤ 爱情运势</h3><p>' + r(f.love, 2) + '</p></div>' +
+    '<div class="horoscope-card"><h3>⭐ 事业运势</h3><p>' + r(f.career, 3) + '</p></div>' +
+    '<div class="horoscope-card"><h3>🌿 健康提醒</h3><p>' + r(f.health, 4) + '</p></div>' +
+    '<div class="lucky-section">' +
+      '<div class="lucky-item"><div class="lucky-label">幸运色</div><div class="lucky-value">' + LUCKY.colors[idx] + '</div></div>' +
+      '<div class="lucky-item"><div class="lucky-label">幸运数</div><div class="lucky-value">' + LUCKY.numbers[idx] + '</div></div>' +
+      '<div class="lucky-item"><div class="lucky-label">幸运物</div><div class="lucky-value">' + LUCKY.items[idx] + '</div></div>' +
+    '</div>' +
+    '<div class="horoscope-actions"><a class="btn-secondary" href="daily.html">✦ 今日星牌</a><a class="btn-secondary" href="services.html">其他占卜</a></div>';
+  
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>

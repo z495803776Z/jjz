@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Night Oracle — 占卜入口</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+.services-page{min-height:100vh;display:flex;flex-direction:column}
+.services-hero{text-align:center;padding:80px 32px 40px;position:relative;z-index:1}
+.services-hero h1{font-family:var(--font-display);font-size:clamp(28px,4vw,42px);margin:0 0 12px}
+.services-hero p{color:var(--color-muted);margin:0;line-height:1.7}
+.services-main{flex:1;padding:0 32px 80px;position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.service-card{padding:0;display:flex;flex-direction:column;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
+.service-thumb-wrap{position:relative;overflow:hidden}
+.service-thumb{width:100%;height:180px;object-fit:cover;display:block;transition:transform .4s ease}
+.service-card:hover .service-thumb{transform:scale(1.06)}
+.service-icon-badge{position:absolute;bottom:10px;right:10px;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:rgba(5,10,20,.75);border:1px solid rgba(100,210,255,.3);backdrop-filter:blur(8px);font-size:14px;color:var(--color-accent);pointer-events:none}
+.service-body{padding:16px 16px 0;flex:1;text-align:center}
+.service-card h3{margin:0 0 4px;font-family:var(--font-display);font-size:18px;color:var(--color-text)}
+.service-card p{margin:0;color:var(--color-muted);font-size:13px;line-height:1.5}
+.service-card .btn-primary{margin:16px;height:42px;font-size:13px}
+.service-card:hover{transform:translateY(-6px);border-color:rgba(100,210,255,.22);box-shadow:0 8px 40px rgba(100,210,255,.12)}
+.lib-link{display:block;text-align:center;padding:0 32px 60px;position:relative;z-index:1}
+.lib-link a{color:var(--color-accent-secondary);font-size:14px;text-decoration:none;letter-spacing:.08em;transition:color .2s ease}
+.lib-link a:hover{color:var(--color-accent)}
+@media(max-width:1024px){.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:768px){.service-grid{grid-template-columns:1fr}.services-hero{padding:60px 20px 24px}}
+
+.ambient-toggle{position:fixed;bottom:24px;right:24px;z-index:100;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(5,10,20,.8);backdrop-filter:blur(8px);color:var(--color-muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+.ambient-toggle:hover{border-color:rgba(100,210,255,.3);color:var(--color-accent)}
+.ambient-toggle.active{border-color:rgba(100,210,255,.4);color:var(--color-accent);box-shadow:0 0 20px rgba(100,210,255,.15)}</style>
+</head>
+<body>
+<canvas class="starfield" aria-hidden="true"></canvas>
+<div class="services-page">
+  <div class="services-hero">
+    <h1>选择你的占卜方式</h1>
+    <p>静心已毕，现在选择一种占卜方式，开始与宇宙对话。</p>
+  </div>
+  <div class="services-main">
+    <div class="service-grid">
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/service_daily.png" alt="" />
+          <div class="service-icon-badge">✦</div>
+        </div>
+        <div class="service-body">
+          <h3>今日星牌</h3>
+          <p>每日一张，轻量高频的自我觉察。</p>
+        </div>
+        <a class="btn-primary" href="daily.html">抽取今日星牌</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/service_single.png" alt="" />
+          <div class="service-icon-badge">◈</div>
+        </div>
+        <div class="service-body">
+          <h3>单牌启示</h3>
+          <p>带着问题，获得一张牌的宇宙回应。</p>
+        </div>
+        <a class="btn-primary" href="single.html">开始单牌占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/service_three_card.png" alt="" />
+          <div class="service-icon-badge">◇</div>
+        </div>
+        <div class="service-body">
+          <h3>三牌阵</h3>
+          <p>过去、现在、未来，经典结构化牌阵。</p>
+        </div>
+        <a class="btn-primary" href="three.html">开始三牌占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Five-Card-Insight-Spread.png" alt="" />
+          <div class="service-icon-badge">★</div>
+        </div>
+        <div class="service-body">
+          <h3>五牌洞察</h3>
+          <p>过去、现在、未来、内因与建议。</p>
+        </div>
+        <a class="btn-primary" href="five.html">开始五牌占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Relationship-Spread.png" alt="" />
+          <div class="service-icon-badge">♡</div>
+        </div>
+        <div class="service-body">
+          <h3>关系牌阵</h3>
+          <p>双方视角的感情洞察与走向。</p>
+        </div>
+        <a class="btn-primary" href="relationship.html">开始关系占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Horseshoe-Spread.png" alt="" />
+          <div class="service-icon-badge">✦</div>
+        </div>
+        <div class="service-body">
+          <h3>马蹄铁阵</h3>
+          <p>七张牌全方位洞察，从过去到未来。</p>
+        </div>
+        <a class="btn-primary" href="horseshoe.html">开始马蹄铁占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Decision-Spread.png" alt="" />
+          <div class="service-icon-badge">+</div>
+        </div>
+        <div class="service-body">
+          <h3>十字牌阵</h3>
+          <p>核心问题与四个维度的交叉洞察。</p>
+        </div>
+        <a class="btn-primary" href="cross.html">开始十字占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Star-Spread.png" alt="" />
+          <div class="service-icon-badge">☆</div>
+        </div>
+        <div class="service-body">
+          <h3>星型牌阵</h3>
+          <p>五大元素能量的五角星洞察。</p>
+        </div>
+        <a class="btn-primary" href="star.html">开始星型占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Decision-Spread.png" alt="" />
+          <div class="service-icon-badge">↔</div>
+        </div>
+        <div class="service-body">
+          <h3>决策牌阵</h3>
+          <p>面临选择时，对比两条路的走向。</p>
+        </div>
+        <a class="btn-primary" href="decision.html">开始决策占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Moon-Phase-Spread.png" alt="" />
+          <div class="service-icon-badge">☽</div>
+        </div>
+        <div class="service-body">
+          <h3>月相牌阵</h3>
+          <p>七张牌模拟月亮的盈亏周期。</p>
+        </div>
+        <a class="btn-primary" href="moon.html">开始月相占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Celtic-Cross-Spread.png" alt="" />
+          <div class="service-icon-badge">✠</div>
+        </div>
+        <div class="service-body">
+          <h3>几尔特十字</h3>
+          <p>经典 10 张牌深度牌阵，揭示问题全貌。</p>
+        </div>
+        <a class="btn-primary" href="celtic.html">开始深度占卜</a>
+      </article>
+      <article class="service-card card">
+        <div class="service-thumb-wrap">
+          <img class="service-thumb" src="assets/images/Yearly-Zodiac-Spread.png" alt="" />
+          <div class="service-icon-badge">✧</div>
+        </div>
+        <div class="service-body">
+          <h3>年度十二宫</h3>
+          <p>12 张牌对应十二月，揭示全年能量走向。</p>
+        </div>
+        <a class="btn-primary" href="yearly.html">开始年度占卜</a>
+      </article>
+                </div>
+  </div>
+  <div class="lib-link"><a href="about.html" style="margin-right:20px">✴ 关于我们</a><a href="index.html">← 返回首页</a></div>
+</div>
+<script type="module">
+import{initStarfield}from'./js/starfield.js';
+import{initAmbientToggle}from'./js/ambient.js';
+const canvas=document.querySelector('.starfield');
+if(canvas)initStarfield(canvas);
+initAmbientToggle(document.getElementById('ambient-toggle'));
+</script>
+<button class="ambient-toggle" id="ambient-toggle" title="开启环境音">♪</button></body>
+</html>

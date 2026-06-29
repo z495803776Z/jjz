@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Night Oracle — 让星光解读你的命运</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <canvas class="starfield" aria-hidden="true"></canvas>
+
+    <header class="site-header">
+      <a class="brand" href="#">Night Oracle</a>
+      <nav class="nav-links">
+        <a href="#services">占卜服务</a>
+        <a href="#ritual">仪式体验</a>
+        <a href="#proof">用户评价</a>
+        <a href="#conversion">预约</a>
+      </nav>
+      <a class="btn-primary btn-header" href="#services">开始占卜</a>
+    </header>
+
+    <main>
+      <!-- Opening Ritual -->
+      <section id="opening" class="section opening">
+        <div class="opening-scene" id="opening-scene">
+          <canvas class="opening-canvas" id="opening-canvas" aria-hidden="true"></canvas>
+          <div class="opening-content">
+            <img class="opening-logo" src="assets/images/brand_logo.png" alt="Night Oracle" />
+            <h1 class="opening-title">让星光解读你的命运</h1>
+            <p class="opening-subtitle">选一张牌，宇宙正在回应你。</p>
+            <a class="btn-primary opening-cta" href="#services">开始占卜</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Value Bridge -->
+      <section id="value" class="section value">
+        <div class="value-grid">
+          <div class="value-media">
+            <img src="assets/images/value_hero.png" alt="Tarot reading atmosphere" />
+          </div>
+          <div class="value-text">
+            <div class="section-label">About Night Oracle</div>
+            <h2 class="section-title">命运不是宣判，而是一次宇宙提醒</h2>
+            <p class="section-subtitle">这里的占卜不是恐吓，而是帮助你在情感、事业和重要选择面前，获得更清晰的宇宙视角。</p>
+            <ul class="value-highlights">
+              <li><img src="assets/images/icon_reading.png" alt="" /><span>专业塔罗解读</span></li>
+              <li><img src="assets/images/icon_guidance.png" alt="" /><span>沉浸占卜体验</span></li>
+              <li><img src="assets/images/icon_cosmos.png" alt="" /><span>情感 / 事业 / 决策 / 自我探索</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services -->
+      <section id="services" class="section services">
+        <div class="section-header">
+          <div class="section-label">Divination Services</div>
+          <h2 class="section-title">选择你需要的占卜入口</h2>
+          <p class="section-subtitle">从轻量的每日星牌，到深度专题占卜，按照你当前的问题选择最合适的入口。</p>
+        </div>
+        <div class="service-grid">
+          <article class="service-card card">
+            <img class="service-thumb" src="assets/images/service_daily.png" alt="Daily oracle" />
+            <h3>今日星牌</h3>
+            <p>轻量、高频、适合每日互动与分享。</p>
+            <a class="btn-primary" href="#">抽取今日星牌</a>
+          </article>
+          <article class="service-card card">
+            <img class="service-thumb" src="assets/images/service_single.png" alt="Single card reading" />
+            <h3>单牌启示</h3>
+            <p>针对一个具体问题快速获得宇宙提醒。</p>
+            <a class="btn-primary" href="#">开始单牌占卜</a>
+          </article>
+          <article class="service-card card">
+            <img class="service-thumb" src="assets/images/service_three_card.png" alt="Three card reading" />
+            <h3>三牌阵</h3>
+            <p>过去、现在、未来，最经典的结构化牌阵。</p>
+            <a class="btn-primary" href="#">开始三牌占卜</a>
+          </article>
+          <article class="service-card card">
+            <img class="service-thumb" src="assets/images/service_deep_reading.png" alt="Deep reading" />
+            <h3>深度占卜</h3>
+            <p>情感、事业、年度主题，更适合高客单价服务。</p>
+            <a class="btn-primary" href="#">预约深度占卜</a>
+          </article>
+        </div>
+      </section>
+
+      <!-- Ritual -->
+      <section id="ritual" class="section ritual">
+        <div class="section-header">
+          <div class="section-label">Ritual Preview</div>
+          <h2 class="section-title">模拟一次塔罗仪式</h2>
+          <p class="section-subtitle">靠近牌堆，点击抽牌，感受 Night Oracle 的沉浸式占卜体验。</p>
+        </div>
+        <div class="ritual-stage">
+          <img class="ritual-bg" src="assets/images/ritual_table.png" alt="Ritual table" />
+          <img class="ritual-overlay" src="assets/images/ritual_particles.png" alt="" aria-hidden="true" />
+          <div class="ritual-card" id="ritual-card">
+            <div class="ritual-card-inner">
+              <img class="ritual-face-back" src="assets/images/card_back.png" alt="Card back" />
+              <img class="ritual-face-front" src="assets/images/card_face_sample.png" alt="Sample tarot card" />
+            </div>
+          </div>
+          <button class="btn-primary ritual-trigger" id="ritual-trigger">抽牌</button>
+        </div>
+      </section>
+
+      <!-- Proof -->
+      <section id="proof" class="section proof">
+        <div class="section-header">
+          <div class="section-label">Proof</div>
+          <h2 class="section-title">真实体验反馈</h2>
+          <p class="section-subtitle">来自用户的占卜反馈，帮助你判断这个体验是否适合自己。</p>
+        </div>
+        <div class="proof-grid">
+          <article class="testimonial card">
+            <img class="avatar" src="assets/images/testimonial_avatar_01.png" alt="User avatar" />
+            <p>"这是我第一次觉得占卜不是玄学，而是一种整理思路的方式。"</p>
+            <div class="testimonial-name">用户 A</div>
+          </article>
+          <article class="testimonial card">
+            <img class="avatar" src="assets/images/testimonial_avatar_02.png" alt="User avatar" />
+            <p>"仪式感很强，抽牌的那一刻真的会安静下来想问题。"</p>
+            <div class="testimonial-name">用户 B</div>
+          </article>
+          <article class="testimonial card">
+            <img class="avatar" src="assets/images/testimonial_avatar_03.png" alt="User avatar" />
+            <p>"我很喜欢这种星象氛围，不是廉价模板感。"</p>
+            <div class="testimonial-name">用户 C</div>
+          </article>
+          <article class="reader-card card">
+            <img class="reader-avatar" src="assets/images/reader_avatar.png" alt="Reader avatar" />
+            <div>
+              <h3>Night Oracle 占卜顾问</h3>
+              <p>专注于情感、事业与自我探索的结构化解读。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Conversion -->
+      <section id="conversion" class="section conversion">
+        <div class="conversion-stage">
+          <img class="conversion-glow" src="assets/images/cta_glow.png" alt="" aria-hidden="true" />
+          <img class="conversion-badge" src="assets/images/pricing_badge.png" alt="Offer badge" />
+          <div class="section-label">Booking</div>
+          <h2 class="section-title">准备好做一次认真占卜了吗？</h2>
+          <p class="section-subtitle">选择适合你的占卜方式，或直接预约一次深度解读。</p>
+          <div class="conversion-actions">
+            <a class="btn-primary" href="#">立即预约深度占卜</a>
+            <a class="btn-secondary" href="#services">先体验今日星牌</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="assets/images/footer_logo.png" alt="Night Oracle" />
+          <div>Night Oracle — 让星光解读你的命运</div>
+        </div>
+        <div class="footer-links">
+          <a href="#services">占卜服务</a>
+          <a href="#proof">用户评价</a>
+          <a href="#conversion">预约占卜</a>
+        </div>
+        <div class="footer-social">
+          <a href="#"><img src="assets/images/icon_wechat.png" alt="WeChat" /></a>
+          <a href="#"><img src="assets/images/icon_instagram.png" alt="Instagram" /></a>
+        </div>
+        <div class="footer-note">仅供娱乐与自我探索参考</div>
+      </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
+
+

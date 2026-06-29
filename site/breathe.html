@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>星尘呼吸 — Night Oracle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);overflow:hidden;height:100vh}
+canvas{position:fixed;inset:0;z-index:0}
+.breathe-overlay{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.breathe-title{font-family:var(--font-display);font-size:clamp(20px,3vw,28px);color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.08em;transition:opacity .6s ease}
+.breathe-instruction{font-size:clamp(14px,2vw,18px);color:var(--color-accent);letter-spacing:.12em;min-height:28px;transition:opacity .5s ease;opacity:0}
+.breathe-instruction.show{opacity:1}
+.breathe-round{font-size:13px;color:rgba(255,255,255,.35);margin-top:32px;letter-spacing:.1em}
+.breathe-skip{position:fixed;bottom:32px;right:32px;z-index:10;pointer-events:all}
+.breathe-skip a{color:rgba(255,255,255,.3);font-size:13px;text-decoration:none;transition:color .2s ease}
+.breathe-skip a:hover{color:rgba(255,255,255,.7)}
+</style>
+</head>
+<body>
+<canvas id="breathe-canvas"></canvas>
+<div class="breathe-overlay">
+  <div class="breathe-title">在星光中呼吸</div>
+  <div class="breathe-instruction" id="instruction"></div>
+  <div class="breathe-round" id="round"></div>
+</div>
+<div class="breathe-skip"><a href="services.html">跳过 →</a></div>
+
+<script>
+const canvas = document.getElementById('breathe-canvas');
+const ctx = canvas.getContext('2d');
+const instruction = document.getElementById('instruction');
+const roundEl = document.getElementById('round');
+
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+// --- Stars ---
+const stars = [];
+for (let i = 0; i < 200; i++) {
+  stars.push({
+    x: Math.random(), y: Math.random(),
+    r: Math.random() * 1.5 + 0.3,
+    twinkle: Math.random() * Math.PI * 2,
+    speed: Math.random() * 0.8 + 0.3
+  });
+}
+
+// --- Dust particles ---
+const dust = [];
+for (let i = 0; i < 60; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const dist = Math.random() * 200 + 80;
+  dust.push({
+    angle, dist,
+    baseDist: dist,
+    size: Math.random() * 2.5 + 0.8,
+    speed: Math.random() * 0.3 + 0.1,
+    offset: Math.random() * Math.PI * 2,
+    alpha: Math.random() * 0.5 + 0.2
+  });
+}
+
+// --- Breathing config ---
+const PHASES = [
+  { name: '吸气', duration: 4000 },
+  { name: '屏息', duration: 2000 },
+  { name: '呼气', duration: 6000 }
+];
+const TOTAL_ROUNDS = 3;
+const CYCLE_DURATION = PHASES.reduce((s, p) => s + p.duration, 0);
+
+let startTime = null;
+let currentRound = 0;
+
+// --- Glow orb ---
+const orb = { x: 0, y: 0, radius: 0, targetRadius: 0, glowAlpha: 0 };
+
+function getBreathProgress(cycleTime) {
+  let elapsed = cycleTime % CYCLE_DURATION;
+  for (let i = 0; i < PHASES.length; i++) {
+    if (elapsed < PHASES[i].duration) {
+      return { phase: i, progress: elapsed / PHASES[i].duration };
+    }
+    elapsed -= PHASES[i].duration;
+  }
+  return { phase: 0, progress: 0 };
+}
+
+function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+function draw(timestamp) {
+  if (!startTime) startTime = timestamp;
+  const elapsed = timestamp - startTime;
+
+  // Check if all rounds done
+  const totalDuration = TOTAL_ROUNDS * CYCLE_DURATION;
+  if (elapsed >= totalDuration + 1500) {
+    // Done - transition to services
+    window.location.href = 'services.html';
+    return;
+  }
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background gradient
+  const bgGrad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.7);
+  bgGrad.addColorStop(0, 'rgba(8,14,30,1)');
+  bgGrad.addColorStop(1, 'rgba(3,6,12,1)');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Stars
+  const t = timestamp / 1000;
+  for (const s of stars) {
+    const twinkle = Math.sin(t * s.speed + s.twinkle) * 0.4 + 0.6;
+    ctx.globalAlpha = twinkle * 0.7;
+    ctx.fillStyle = 'rgba(200,220,255,1)';
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Breathing orb
+  orb.x = W / 2;
+  orb.y = H / 2;
+
+  if (elapsed < totalDuration) {
+    const roundTime = elapsed % CYCLE_DURATION;
+    const { phase, progress } = getBreathProgress(roundTime);
+    const eased = easeInOut(progress);
+
+    // Current round
+    currentRound = Math.floor(elapsed / CYCLE_DURATION);
+
+    // Orb radius based on phase
+    const minR = Math.min(W, H) * 0.06;
+    const maxR = Math.min(W, H) * 0.18;
+    if (phase === 0) {
+      // Inhale: grow
+      orb.targetRadius = minR + (maxR - minR) * eased;
+    } else if (phase === 1) {
+      // Hold: stay
+      orb.targetRadius = maxR;
+    } else {
+      // Exhale: shrink
+      orb.targetRadius = maxR - (maxR - minR) * eased;
+    }
+    orb.radius += (orb.targetRadius - orb.radius) * 0.15;
+
+    // Instruction text
+    const phaseName = PHASES[phase].name;
+    instruction.textContent = phaseName;
+    instruction.classList.add('show');
+    roundEl.textContent = '第 ' + (currentRound + 1) + ' / ' + TOTAL_ROUNDS + ' 轮';
+
+  } else {
+    // Post-completion: orb pulses gently then fades
+    const fadeP = Math.min(1, (elapsed - totalDuration) / 1500);
+    orb.radius += (0 - orb.radius) * 0.02;
+    instruction.style.opacity = 1 - fadeP;
+    roundEl.style.opacity = 1 - fadeP;
+  }
+
+  // Draw outer glow rings
+  for (let ring = 3; ring >= 0; ring--) {
+    const r = orb.radius * (1.4 + ring * 0.35);
+    const alpha = (0.04 - ring * 0.008) * (orb.radius / 100);
+    const grad = ctx.createRadialGradient(orb.x, orb.y, orb.radius * 0.5, orb.x, orb.y, r);
+    grad.addColorStop(0, 'rgba(100,210,255,' + (alpha * 2) + ')');
+    grad.addColorStop(0.5, 'rgba(140,180,255,' + alpha + ')');
+    grad.addColorStop(1, 'rgba(100,150,255,0)');
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(orb.x, orb.y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Draw main orb
+  const orbGrad = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.radius);
+  orbGrad.addColorStop(0, 'rgba(200,230,255,0.9)');
+  orbGrad.addColorStop(0.3, 'rgba(140,200,255,0.5)');
+  orbGrad.addColorStop(0.7, 'rgba(100,170,255,0.15)');
+  orbGrad.addColorStop(1, 'rgba(80,140,255,0)');
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = orbGrad;
+  ctx.beginPath();
+  ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Draw dust particles orbiting the orb
+  for (const d of dust) {
+    d.angle += d.speed * 0.01;
+    const breatheFactor = orb.radius / (Math.min(W, H) * 0.12);
+    const dist = d.baseDist * breatheFactor + Math.sin(t * 0.5 + d.offset) * 15;
+    const px = orb.x + Math.cos(d.angle + d.offset) * dist;
+    const py = orb.y + Math.sin(d.angle + d.offset) * dist * 0.6;
+    const grad = ctx.createRadialGradient(px, py, 0, px, py, d.size * 2);
+    grad.addColorStop(0, 'rgba(160,210,255,' + d.alpha + ')');
+    grad.addColorStop(1, 'rgba(100,170,255,0)');
+    ctx.globalAlpha = 0.8;
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(px, py, d.size * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
